@@ -1,0 +1,31 @@
+{
+    "Actions": {
+        "Light Attack": ["Press RB", "Release RB"],
+        "Heavy Attack": ["Press RB", "Release RB"],
+        "Guard": ["Press LB", "Release LB"],
+        "Parry": ["Press LT", "Release LT"],
+        "Interact": ["Press A", "Release A"],
+        "Roll": ["Press B", "Release B"],
+        "Item": ["Press X", "Release X"],
+        "Two-hand": ["Press Y", "Release Y"],
+        "Jump": ["Press LSB", "Release LSB"],
+        "Lock": ["Press RSB", "Release RSB"],
+        "Switch Items": ["Press DPD", "Release DPD"],
+        "Switch Spells": ["Press DPU", "Release DPU"],
+        "Switch Right Hand": ["Press DPR", "Release DPR"],
+        "Switch Left Hand": ["Press DPL", "Release DPL"],
+        "Menu": ["Press START", "Release START"],
+        "Gestures": ["Press BACK", "Release BACK"],
+        "Walk Forth": ["Press LS Up"],
+        "Walk Back": ["Press LS Down"],
+        "Walk Left": ["Press LS Left"],
+        "Walk Right": ["Press LS Right"],
+        "Stop": ["Release LS"]
+    },
+    "Directions": {
+        "Up": [0.0, 1.0],
+        "Down": [0.0, -1.0],
+        "Left": [-1.0, 0.0],
+        "Right": [1.0, 0.0]
+    }
+}
