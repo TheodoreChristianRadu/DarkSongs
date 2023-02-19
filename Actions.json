@@ -1,5 +1,6 @@
 {
     "Actions": {
+        "": [],
         "Light Attack": ["Press RB", "Release RB"],
         "Heavy Attack": ["Press RB", "Release RB"],
         "Guard": ["Press LB", "Release LB"],

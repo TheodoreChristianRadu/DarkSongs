@@ -1,5 +1,6 @@
 import vgamepad
 import json
+import time
 
 gamepad = vgamepad.VX360Gamepad()
 
@@ -35,6 +36,7 @@ def perform(action):
     for instruction in instructions:
         emulate(*instruction.split())
         gamepad.update()
+        time.sleep(0.01)
 
 def emulate(type, button, direction=None):
     if (button in digital):
@@ -47,9 +49,3 @@ def emulate(type, button, direction=None):
         else:
             if (type == "Press"): analog[button](1.0)
             if (type == "Release"): analog[button](0.0)
-
-while True:
-    perform("Light Attack")
-    perform("Switch Spells")
-    perform("Walk Left")
-    perform("Lock")
