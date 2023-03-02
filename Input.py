@@ -1,24 +1,25 @@
-import vgamepad
-import json
+from vgamepad import *
+import threading
 import time
+import json
 
-gamepad = vgamepad.VX360Gamepad()
+gamepad = VX360Gamepad()
 
 digital = {
-    "A": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_A,
-    "B": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_B,
-    "X": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_X,
-    "Y": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_Y,
-    "LB": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER,
-    "RB": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER,
-    "LSB": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_LEFT_THUMB,
-    "RSB": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_THUMB,
-    "DPU": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_UP,
-    "DPD": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_DOWN,
-    "DPL": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_LEFT,
-    "DPR": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_DPAD_RIGHT,
-    "BACK": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_BACK,
-    "START": vgamepad.XUSB_BUTTON.XUSB_GAMEPAD_START
+    "A": XUSB_BUTTON.XUSB_GAMEPAD_A,
+    "B": XUSB_BUTTON.XUSB_GAMEPAD_B,
+    "X": XUSB_BUTTON.XUSB_GAMEPAD_X,
+    "Y": XUSB_BUTTON.XUSB_GAMEPAD_Y,
+    "LB": XUSB_BUTTON.XUSB_GAMEPAD_LEFT_SHOULDER,
+    "RB": XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_SHOULDER,
+    "LSB": XUSB_BUTTON.XUSB_GAMEPAD_LEFT_THUMB,
+    "RSB": XUSB_BUTTON.XUSB_GAMEPAD_RIGHT_THUMB,
+    "DPU": XUSB_BUTTON.XUSB_GAMEPAD_DPAD_UP,
+    "DPD": XUSB_BUTTON.XUSB_GAMEPAD_DPAD_DOWN,
+    "DPL": XUSB_BUTTON.XUSB_GAMEPAD_DPAD_LEFT,
+    "DPR": XUSB_BUTTON.XUSB_GAMEPAD_DPAD_RIGHT,
+    "BACK": XUSB_BUTTON.XUSB_GAMEPAD_BACK,
+    "START": XUSB_BUTTON.XUSB_GAMEPAD_START
 }
 
 analog = {
@@ -32,20 +33,24 @@ with open("Actions.json") as file:
     actions = json.load(file)
 
 def perform(action):
-    instructions = actions["Actions"][action]
-    for instruction in instructions:
-        emulate(*instruction.split())
-        gamepad.update()
-        time.sleep(0.01)
+    def perform():
+        instructions = actions["Actions"][action]
+        for instruction in instructions:
+            execute(*instruction.split())
+    threading.Thread(target=perform).start()
 
-def emulate(type, button, direction=None):
-    if (button in digital):
-        if (type == "Press"): gamepad.press_button(digital[button])
-        if (type == "Release"): gamepad.release_button(digital[button])
-    if (button in analog):
-        if button.endswith("S"):
-            if (type == "Press"): analog[button](*actions["Directions"][direction])
-            if (type == "Release"): analog[button](0.0, 0.0)
+def execute(command, target, direction=None):
+    if command == "Wait":
+        time.sleep(float(target))
+        return
+    if target in digital:
+        if command == "Press": gamepad.press_button(digital[target])
+        if command == "Release": gamepad.release_button(digital[target])
+    if target in analog:
+        if target.endswith("S"):
+            if command == "Press": analog[target](*actions["Directions"][direction])
+            if command == "Release": analog[target](0.0, 0.0)
         else:
-            if (type == "Press"): analog[button](1.0)
-            if (type == "Release"): analog[button](0.0)
+            if command == "Press": analog[target](1.0)
+            if command == "Release": analog[target](0.0)
+    gamepad.update()

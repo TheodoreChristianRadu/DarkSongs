@@ -15,18 +15,20 @@ class Player:
         cls.player = super().__new__(cls)
         return cls.player
 
-    def __init__(self, process):
+    def __init__(self, process, duration, minimum, maximum):
+        samplerate = sounddevice.query_devices(device=sounddevice.default.device[0])['default_samplerate']
+        frametime = int(5 * samplerate / minimum)
         self.note = 0.0
         def detect(input, frames, time, status):
             previous = self.note
-            frequencies = librosa.pyin(input.T, fmin=50, fmax=500, sr=44100)[0]
+            frequencies = librosa.pyin(input.T, fmin=minimum, fmax=maximum, sr=samplerate, frame_length=frametime)[0]
             if numpy.count_nonzero(numpy.isnan(frequencies)) <= 2:
                 self.note = numpy.nanmean(frequencies)
             ratio = self.note / previous if previous != 0.0 else 1.0
             distance = lambda interval: abs(numpy.log2(ratio) - numpy.log2(interval[1]))
             name = min(intervals.items(), key=distance)[0]
             process(self.note, ratio, name)
-        self.stream = sounddevice.InputStream(callback=detect, samplerate=44100, blocksize=8820)
+        self.stream = sounddevice.InputStream(callback=detect, blocksize=int(duration * samplerate))
         self.stream.start()
 
     @classmethod
