@@ -17,6 +17,8 @@
         "Switch Left Hand": ["Press DPL", "Wait 0.1", "Release DPL"],
         "Menu": ["Press START", "Wait 0.1", "Release START"],
         "Gestures": ["Press BACK", "Wait 0.1", "Release BACK"],
+        "Camera Left": ["Press RS Left", "Wait 0.4", "Release RS"],
+        "Camera Right": ["Press RS Right", "Wait 0.4", "Release RS"],
         "Walk Forth": ["Press LS Up"],
         "Walk Back": ["Press LS Down"],
         "Walk Left": ["Press LS Left"],
