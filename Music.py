@@ -1,10 +1,11 @@
 import sounddevice
+import soundfile
 import librosa
 import numpy
 import json
 
-with open("Intervals.json") as file:
-    intervals = json.load(file)
+with open("Tones.json") as file:
+    tones = json.load(file)
 
 class Player:
 
@@ -15,20 +16,31 @@ class Player:
         cls.player = super().__new__(cls)
         return cls.player
 
-    def __init__(self, process, duration, minimum, maximum):
-        samplerate = sounddevice.query_devices(device=sounddevice.default.device[0])['default_samplerate']
-        frametime = int(5 * samplerate / minimum)
-        self.note = 0.0
-        def detect(input, frames, time, status):
-            previous = self.note
-            frequencies = librosa.pyin(input.T, fmin=minimum, fmax=maximum, sr=samplerate, frame_length=frametime)[0]
-            if numpy.count_nonzero(numpy.isnan(frequencies)) <= 2:
-                self.note = numpy.nanmean(frequencies)
-            ratio = self.note / previous if previous != 0.0 else 1.0
-            distance = lambda interval: abs(numpy.log2(ratio) - numpy.log2(interval[1]))
-            name = min(intervals.items(), key=distance)[0]
-            process(self.note, ratio, name)
-        self.stream = sounddevice.InputStream(callback=detect, blocksize=int(duration * samplerate))
+    def __init__(self, process, duration, fundamental, volume):
+        strings, samplerate = soundfile.read("Strings.wav")
+        frequency = numpy.nanmean(librosa.pyin(strings.T.sum(0), fmin=50, fmax=1000, sr=samplerate)[0])
+        minimum = min(tones.values()) * fundamental
+        maximum = max(tones.values()) * fundamental
+        window = int(5 * samplerate / minimum)
+        self.tone = None
+        self.position = 0
+        def play(input, output, frames, time, status):
+            end = self.position + int(frames * fundamental / frequency)
+            samples = numpy.linspace(self.position, end, frames, False).astype(int) % strings.shape[0]
+            self.position = end % strings.shape[0]
+            output[:] = strings[samples] * volume / 100
+            frequencies = librosa.pyin(input.T.sum(0), fmin=minimum, fmax=maximum, sr=samplerate, frame_length=window)[0]
+            if numpy.count_nonzero(numpy.isnan(frequencies)) <= 1:
+                note = numpy.nanmean(frequencies)
+                ratio = note / fundamental
+                distance = lambda tone: abs(numpy.log2(ratio) - numpy.log2(tone[1]))
+                tone = min(tones.items(), key=distance)[0]
+                if tone != self.tone:
+                    process(note, tone)
+                    self.tone = tone
+            else:
+                self.tone = None
+        self.stream = sounddevice.Stream(callback=play, blocksize=int(duration * samplerate))
         self.stream.start()
 
     @classmethod
