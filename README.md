@@ -19,7 +19,7 @@ There are currently two versions of the software:
 ## Ratios
 
 By default, the ratios for intervals respectively tones were calculated by the following formula corresponding to *equal temperament*:
-$$ r = 2^{i/12} for i \in [-12, 12] $$
+$$ratio = 2^{i/12} \\, for \\: i \in [-12, 12]$$
 Intervals respectively tones can be added by editing **Intervals.json** respectively **Tones.json**.
 As an example, to add the ability to detect *Minor Ninths*, one would modify **Intervals.json** thusly:
 ```
@@ -42,14 +42,14 @@ Each action is given a name and a list of successive commands to execute as such
 ```"Name": ["Press A", "Wait 0.1", "Release A"]```
 Commands are strings of characters enclosed between quotation marks. They can be of the following forms:
 + `"Press Button"` or `"Release Button"` where `Button` can be `A`, `B`, `X`, `Y`, `LB`, `RB`, `LT`, `RT`, `LSB`, `RSB`, `DPU`, `DPD`, `DPR`, `DPL`, `START` or `BACK`
-+ `Press Stick Direction` or `Release Stick` where `Stick` can be `LS` or `RS` and `Direction` must be defined under **Directions**
++ `Press Stick Direction` or `Release Stick` where `Stick` can be `LS` or `RS` and `Direction` must be defined as a list of **horizontal** and **vertical** values under *Directions*
 + `Wait T` where T is a value corresponding to the time to wait in seconds
 
 ## Configuration
 
 The main configuration can be changed both from the software's interface and by manually editing **Configuration.json**.
-+ The **Mappings** assign an action from **Actions.json** to each interval respectively tone from **Intervals.json** respectively **Tones.json**.
-+ The **Note Duration** parameter determines how often note detections occur in seconds. Too high the value and the game will feel nonresponsive and your notes will have to last quite long, too low the value and the detection will become imprecise. Keep it between 0.1 and 0.5 for reasonable results.
-+ In the *interval version*, the **Minimum Frequency** and **Maximum Frequency** parameters determine the minimum and maximum pitch in hertz that may be detected from your voice. Set them depending on your vocal range. In the *tonal version*, these are calculated based on the lowest and highest tones defined.
-+ In the *tonal version*, the **Fundamental Frequency** parameter determines the reference frequency in hertz to which your voice will be compared. It is the tonal center of your song. Set it to the note you feel the most comfortable singing.
-+ In the *tonal version*, the **Output Volume** parameter determines the volume of the string accompaniment to be played between 0 and 100. If you have perfect pitch, set it to 0.
++ The *Mappings* assign an action from **Actions.json** to each interval respectively tone from **Intervals.json** respectively **Tones.json**.
++ The *Note Duration* parameter determines how often note detections occur in seconds. Too high the value and the game will feel nonresponsive and your notes will have to last quite long, too low the value and the detection will become imprecise. Keep it between 0.1 and 0.5 for reasonable results.
++ In the *interval version*, the *Minimum Frequency* and *Maximum Frequency* parameters determine the minimum and maximum pitch in hertz that may be detected from your voice. Set them depending on your vocal range. In the *tonal version*, these are calculated based on the lowest and highest tones defined.
++ In the *tonal version*, the *Fundamental Frequency* parameter determines the reference frequency in hertz to which your voice will be compared. It is the tonal center of your song. Set it to the note you feel the most comfortable singing.
++ In the *tonal version*, the *Output Volume* parameter determines the volume of the string accompaniment to be played between 0 and 100. If you have perfect pitch, set it to 0.
