@@ -43,7 +43,7 @@ Each action is given a name and a list of successive commands to execute as such
 Commands are strings of characters enclosed between quotation marks. They can be of the following forms:
 + `"Press Button"` or `"Release Button"` where `Button` can be `A`, `B`, `X`, `Y`, `LB`, `RB`, `LT`, `RT`, `LSB`, `RSB`, `DPU`, `DPD`, `DPR`, `DPL`, `START` or `BACK`
 + `Press Stick Direction` or `Release Stick` where `Stick` can be `LS` or `RS` and `Direction` must be defined as a list of **horizontal** and **vertical** values under *Directions*
-+ `Wait T` where `T` is a value corresponding to the time to wait in seconds
++ `Wait Time` where `Time` is a value corresponding to the time to wait in seconds
 
 ## Configuration
 
