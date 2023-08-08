@@ -10,11 +10,11 @@ block_cipher = None
 a = Analysis(
     ['DarkSongs.py'],
     pathex=[],
-    binaries=[('Python/Lib/site-packages/customtkinter', 'customtkinter/'),
+    binaries=[],
+    datas=[('Python/Lib/site-packages/customtkinter', 'customtkinter/'),
             ('Python/Lib/site-packages/librosa', 'librosa/'),
             ('Python/Lib/site-packages/sklearn', 'sklearn/'),
             ('Python/Lib/site-packages/vgamepad', 'vgamepad/')],
-    datas=[],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
